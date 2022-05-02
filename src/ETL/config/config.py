@@ -1,11 +1,14 @@
 import json
 
 
-API_ID = '10722341'
-API_HASH = '35e06edc1b465131d9282ca13c5e64fe'
-DATA_FOLDER_PATH = '/home/kinfi4/python/Propaganda-Analyzer/src/data'
+API_ID = '17332691'
+API_HASH = '626a6ab20ca7d1c151a4d1984448fd0c'
+DATA_FOLDER_PATH = '/home/kinfi4/python/Propaganda-Anlyzer/src/data'
 
-MESSAGES_MAX_NUMBER_LIMIT = 5
+LAST_POST_PUBLISH_DATE = 'LAST_POST_PUBLISH_DATE'
+DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
+
+MESSAGES_MAX_NUMBER_LIMIT = 1
 
 with open('/home/kinfi4/python/Propaganda-Analyzer/src/ETL/config/CHANNEL_REGISTRY.json') as registry_file:
     CHANNEL_REGISTRY = json.load(registry_file)

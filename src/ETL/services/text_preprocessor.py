@@ -34,7 +34,8 @@ class TextPreprocessor:
 
     def remove_punctuation(self):
         self._text = re.sub(rf'[{punctuation}]', '', self._text)
-        self._text = self._text.replace(' – ', ' ').replace(' - ', ' ')
+        self._text = self._text.replace(' – ', ' ').replace(' - ', ' ').replace(' — ', ' ')
+        self._text = self._text.replace('»', '').replace('«', '')
 
     def remove_extra_spaces(self):
         self._text = re.sub(' +', ' ', self._text)
