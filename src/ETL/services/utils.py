@@ -1,4 +1,13 @@
+import os
+import typing
+from datetime import datetime
+
 from emoji import EMOJI_DATA
+from googletrans import Translator
+from telethon.tl.custom.message import Message
+
+from services.text_preprocessor import TextPreprocessor
+from config.config import DATE_FORMAT, NEWS_DATA_FOLDER_PATH
 
 
 def cut_channel_link(channel_link: str) -> str:
@@ -18,6 +27,36 @@ def chat_name_standardizer(chat_name: str) -> str:
     symbols_to_remove = ('|', '"', '\'', '-', ',', '.')
     new_chat_name = chat_name.translate({ord(c): '' for c in symbols_to_remove})
     new_chat_name = ''.join([c for c in new_chat_name if c not in EMOJI_DATA and ord(c) < 1200])
+    new_chat_name = new_chat_name.strip()
     new_chat_name = new_chat_name.replace(' ', '_')
 
     return new_chat_name
+
+
+def export_post_to_csv(csv_writer, translator: Translator, message: Message, post_date: datetime):
+    channel_name = message.chat.title
+
+    text_preprocessor = TextPreprocessor(message.text)
+    text_preprocessor.make_all_preprocessing()
+
+    preprocessed_text = text_preprocessor.get_text()
+
+    translated_text = translator.translate(
+        text=preprocessed_text,
+        src=text_preprocessor.language.value,
+        dest='en'
+    )
+
+    text_preprocessor = TextPreprocessor(translated_text.text)
+    text_preprocessor.remove_punctuation()
+
+    csv_writer.writerow([channel_name, translated_text.text, post_date.strftime(DATE_FORMAT)])
+
+
+def get_or_create_channel_file(channel_cut_name: str) -> typing.TextIO:
+    file_path = os.path.join(NEWS_DATA_FOLDER_PATH, channel_cut_name + '.csv')
+
+    if os.path.exists(file_path):
+        return open(file_path, 'a')
+
+    return open(file_path, 'w')

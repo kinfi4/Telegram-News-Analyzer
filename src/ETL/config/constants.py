@@ -3,8 +3,8 @@ from enum import Enum
 
 
 class Languages(Enum):
-    RUSSIAN = 'RUS'
-    UKRAINIAN = 'UA'
+    RUSSIAN = 'ru'
+    UKRAINIAN = 'uk'
 
 
 emoji_regex_compiled = re.compile(

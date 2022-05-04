@@ -15,7 +15,7 @@ class TextPreprocessor:
         self._text = text.lower()
         self.language = self._define_language()
 
-    def make_preprocessing(self):
+    def make_all_preprocessing(self):
         self.remove_links()
         self.remove_emoji()
         self.remove_punctuation()
