@@ -32,7 +32,6 @@ async def collect_posts():
             message: Message
             async for message in client.iter_messages(entity, limit=conf.MESSAGES_MAX_NUMBER_LIMIT):
                 post_date = message.date.astimezone(last_post_to_fetch_date.tzinfo)
-                print(entity.title, post_date, len(message.text))
 
                 if len(message.text) < 20:
                     continue

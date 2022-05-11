@@ -2,20 +2,21 @@ import re
 from string import punctuation
 
 from nltk.tokenize import word_tokenize
+from googletrans import Translator
 
 from config.constants import Languages, emoji_regex_compiled
 from config.config import RUSSIAN_STOP_WORDS, UKRAINIAN_STOP_WORDS
 
 
 class TextPreprocessor:
-    _ukrainian_letters = ('ї', 'і', 'є', 'ґ')
-    _russian_letters = ('ы', 'э', 'ё', 'ъ')
-
-    def __init__(self, text: str):
+    def __init__(self, text: str, translator: Translator):
         self._text = text.lower()
-        self.language = self._define_language()
+        self._translator = translator
+        self._language = None
 
     def make_all_preprocessing(self):
+        self._language = self.define_language()
+
         self.remove_links()
         self.remove_emoji()
         self.remove_punctuation()
@@ -29,7 +30,7 @@ class TextPreprocessor:
         self._text = re.sub(emoji_regex_compiled, '', self._text)
 
     def remove_stop_words(self):
-        stop_words = RUSSIAN_STOP_WORDS if self.language == Languages.RUSSIAN else UKRAINIAN_STOP_WORDS
+        stop_words = RUSSIAN_STOP_WORDS if self._language == Languages.RUSSIAN else UKRAINIAN_STOP_WORDS
         self._text = ' '.join([word for word in word_tokenize(self._text) if word not in stop_words])
 
     def remove_punctuation(self):
@@ -43,8 +44,8 @@ class TextPreprocessor:
     def get_text(self):
         return self._text
 
-    def _define_language(self):
-        if any([letter in self._text for letter in self._ukrainian_letters]):
-            return Languages.UKRAINIAN
-        else:
-            return Languages.RUSSIAN
+    def get_language(self):
+        return self._language
+
+    def define_language(self):
+        return Languages.RUSSIAN if self._translator.detect(self._text).lang == 'ru' else Languages.UKRAINIAN

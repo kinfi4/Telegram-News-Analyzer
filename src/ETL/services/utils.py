@@ -36,21 +36,22 @@ def chat_name_standardizer(chat_name: str) -> str:
 def export_post_to_csv(csv_writer, translator: Translator, message: Message, post_date: datetime):
     channel_name = message.chat.title
 
-    text_preprocessor = TextPreprocessor(message.text)
+    channel_name_preprocessor = TextPreprocessor(channel_name, translator)
+    channel_name_preprocessor.remove_emoji()
+
+    channel_name = channel_name_preprocessor.get_text()
+
+    text_preprocessor = TextPreprocessor(message.text, translator=translator)
     text_preprocessor.make_all_preprocessing()
 
     preprocessed_text = text_preprocessor.get_text()
 
-    translated_text = translator.translate(
-        text=preprocessed_text,
-        src=text_preprocessor.language.value,
-        dest='en'
-    )
-
-    text_preprocessor = TextPreprocessor(translated_text.text)
-    text_preprocessor.remove_punctuation()
-
-    csv_writer.writerow([channel_name, translated_text.text, post_date.strftime(DATE_FORMAT)])
+    csv_writer.writerow([
+        channel_name,
+        preprocessed_text,
+        post_date.strftime(DATE_FORMAT),
+        text_preprocessor.get_language().value
+    ])
 
 
 def get_or_create_channel_file(channel_cut_name: str) -> typing.TextIO:
