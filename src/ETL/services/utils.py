@@ -3,7 +3,6 @@ import typing
 from datetime import datetime
 
 from emoji import EMOJI_DATA
-from googletrans import Translator
 from telethon.tl.custom.message import Message
 
 from services.text_preprocessor import TextPreprocessor
@@ -33,24 +32,16 @@ def chat_name_standardizer(chat_name: str) -> str:
     return new_chat_name
 
 
-def export_post_to_csv(csv_writer, translator: Translator, message: Message, post_date: datetime):
+def export_post_to_csv(csv_writer, processor: TextPreprocessor, message: Message, post_date: datetime):
     channel_name = message.chat.title
+    channel_name = processor.remove_emoji(channel_name.lower())
 
-    channel_name_preprocessor = TextPreprocessor(channel_name, translator)
-    channel_name_preprocessor.remove_emoji()
-
-    channel_name = channel_name_preprocessor.get_text()
-
-    text_preprocessor = TextPreprocessor(message.text, translator=translator)
-    text_preprocessor.make_all_preprocessing()
-
-    preprocessed_text = text_preprocessor.get_text()
+    post_text = processor.make_all_preprocessing(text=message.text.lower())
 
     csv_writer.writerow([
         channel_name,
-        preprocessed_text,
+        post_text,
         post_date.strftime(DATE_FORMAT),
-        text_preprocessor.get_language().value
     ])
 
 

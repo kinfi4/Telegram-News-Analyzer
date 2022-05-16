@@ -1,51 +1,51 @@
 import re
 from string import punctuation
 
+from pymorphy2 import MorphAnalyzer
 from nltk.tokenize import word_tokenize
-from googletrans import Translator
 
-from config.constants import Languages, emoji_regex_compiled
-from config.config import RUSSIAN_STOP_WORDS, UKRAINIAN_STOP_WORDS
+from config.constants import emoji_regex_compiled
+from config.config import RUSSIAN_STOP_WORDS
 
 
 class TextPreprocessor:
-    def __init__(self, text: str, translator: Translator):
-        self._text = text.lower()
-        self._translator = translator
-        self._language = None
+    def __init__(self, morph: MorphAnalyzer = None):
+        self._morph = morph if morph else MorphAnalyzer()
 
-    def make_all_preprocessing(self):
-        self._language = self.define_language()
+    def make_all_preprocessing(self, text: str) -> str:
+        text = text.lower()
+        text = self.remove_links(text)
+        text = self.remove_emoji(text)
+        text = self.remove_punctuation(text)
+        text = self.remove_stop_words(text)
+        text = self.remove_extra_spaces(text)
 
-        self.remove_links()
-        self.remove_emoji()
-        self.remove_punctuation()
-        self.remove_stop_words()
-        self.remove_extra_spaces()
+        return text
 
-    def remove_links(self):
-        self._text = re.sub(r'https?://\S+|www\.\S+', '', self._text)
+    def preprocess_and_lemmatize(self, text: str) -> str:
+        text = self.make_all_preprocessing(text)
+        tokens = word_tokenize(text, language='russian')
 
-    def remove_emoji(self):
-        self._text = re.sub(emoji_regex_compiled, '', self._text)
+        return ' '.join((self._morph.parse(word)[0].normal_form for word in tokens))
 
-    def remove_stop_words(self):
-        stop_words = RUSSIAN_STOP_WORDS if self._language == Languages.RUSSIAN else UKRAINIAN_STOP_WORDS
-        self._text = ' '.join([word for word in word_tokenize(self._text) if word not in stop_words])
+    @staticmethod
+    def remove_links(text: str):
+        return re.sub(r'https?://\S+|www\.\S+', '', text)
 
-    def remove_punctuation(self):
-        self._text = re.sub(rf'[{punctuation}]', '', self._text)
-        self._text = self._text.replace(' – ', ' ').replace(' - ', ' ').replace(' — ', ' ')
-        self._text = self._text.replace('»', '').replace('«', '')
+    @staticmethod
+    def remove_emoji(text: str):
+        return re.sub(emoji_regex_compiled, '', text)
 
-    def remove_extra_spaces(self):
-        self._text = re.sub(' +', ' ', self._text)
+    @staticmethod
+    def remove_stop_words(text: str):
+        return ' '.join([word for word in word_tokenize(text) if word not in RUSSIAN_STOP_WORDS])
 
-    def get_text(self):
-        return self._text
+    @staticmethod
+    def remove_punctuation(text: str):
+        text = re.sub(rf'[{punctuation}]', '', text)
+        text = text.replace(' – ', ' ').replace(' - ', ' ').replace(' — ', ' ')
+        return text.replace('»', '').replace('«', '')
 
-    def get_language(self):
-        return self._language
-
-    def define_language(self):
-        return Languages.RUSSIAN if self._translator.detect(self._text).lang == 'ru' else Languages.UKRAINIAN
+    @staticmethod
+    def remove_extra_spaces(text: str):
+        return re.sub(' +', ' ', text)

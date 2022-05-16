@@ -4,11 +4,11 @@ from datetime import datetime
 from telethon import TelegramClient
 from telethon.tl.custom.message import Message
 from telethon.tl.types import Channel
-from googletrans import Translator
 
 import config.config as conf
 from services.utils import cut_channel_link, export_post_to_csv, get_or_create_channel_file
 from services.config_reader import ConfigReader
+from services.text_preprocessor import TextPreprocessor
 
 
 client = TelegramClient('session-1', api_id=conf.API_ID, api_hash=conf.API_HASH)
@@ -21,7 +21,7 @@ async def collect_posts():
     conf_reader = ConfigReader('./config/.config')
     last_post_to_fetch_date = datetime.strptime(conf_reader.get(conf.LAST_POST_PUBLISH_DATE), conf.DATE_FORMAT)
 
-    translator = Translator()
+    processor = TextPreprocessor()
 
     for channel_name in channels_to_export_cut:
         entity: Channel = await client.get_entity(channel_name)
@@ -39,6 +39,6 @@ async def collect_posts():
                 if last_post_to_fetch_date and post_date < last_post_to_fetch_date.astimezone(last_post_to_fetch_date.tzinfo):
                     break
 
-                export_post_to_csv(csv_writer, translator, message, post_date)
+                export_post_to_csv(csv_writer, processor, message, post_date)
 
-    conf_reader.set(conf.LAST_POST_PUBLISH_DATE, datetime.now().strftime(conf.DATE_FORMAT))
+    # conf_reader.set(conf.LAST_POST_PUBLISH_DATE, datetime.now().strftime(conf.DATE_FORMAT))
