@@ -48,5 +48,3 @@ async def collect_posts():
                     break
 
                 export_post_to_csv(csv_writer, processor, message, post_date)
-
-    # conf_reader.set(conf.LAST_POST_PUBLISH_DATE, datetime.now().strftime(conf.DATE_FORMAT))
