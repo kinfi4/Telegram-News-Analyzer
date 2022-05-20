@@ -15,11 +15,17 @@ client = TelegramClient('session-1', api_id=conf.API_ID, api_hash=conf.API_HASH)
 
 
 async def collect_posts():
-    channels_to_export_raw = conf.CHANNEL_REGISTRY['CHANNEL_LIST'][:3]
+    channels_to_export_raw = conf.CHANNEL_REGISTRY['CHANNEL_LIST'][:7]
     channels_to_export_cut = map(cut_channel_link, channels_to_export_raw)
 
     conf_reader = ConfigReader('./config/.config')
     last_post_to_fetch_date = datetime.strptime(conf_reader.get(conf.LAST_POST_PUBLISH_DATE), conf.DATE_FORMAT)
+
+    offset_date_string = conf_reader.get(conf.FIRST_POST_PUBLISH_DATE)
+    if offset_date_string:
+        offset_date = datetime.strptime(offset_date_string, conf.DATE_FORMAT)
+    else:
+        offset_date = datetime.now()
 
     processor = TextPreprocessor()
 
@@ -30,10 +36,12 @@ async def collect_posts():
             csv_writer = csv.writer(destination_file_obj)
 
             message: Message
-            async for message in client.iter_messages(entity, limit=conf.MESSAGES_MAX_NUMBER_LIMIT):
+            async for message in client.iter_messages(entity, limit=conf.MESSAGES_MAX_NUMBER_LIMIT, offset_date=offset_date):
                 post_date = message.date.astimezone(last_post_to_fetch_date.tzinfo)
 
-                if len(message.text) < 20:
+                print(message.chat.title)
+
+                if not message.text or len(message.text) < 20:
                     continue
 
                 if last_post_to_fetch_date and post_date < last_post_to_fetch_date.astimezone(last_post_to_fetch_date.tzinfo):

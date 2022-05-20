@@ -8,9 +8,12 @@ DATA_FOLDER_PATH = '/home/kinfi4/python/Propaganda-Analyzer/src/data'
 NEWS_DATA_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'news-posts')
 
 LAST_POST_PUBLISH_DATE = 'LAST_POST_PUBLISH_DATE'
+FIRST_POST_PUBLISH_DATE = 'FIRST_POST_PUBLISH_DATE'
 DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
 
-MESSAGES_MAX_NUMBER_LIMIT = 2
+MESSAGES_MAX_NUMBER_LIMIT = 500
+
+MAX_POST_LEN_IN_WORDS = 20
 
 with open('/home/kinfi4/python/Propaganda-Analyzer/src/ETL/config/CHANNEL_REGISTRY.json') as registry_file:
     CHANNEL_REGISTRY = json.load(registry_file)
