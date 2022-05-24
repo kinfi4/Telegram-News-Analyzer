@@ -15,17 +15,14 @@ client = TelegramClient('session-1', api_id=conf.API_ID, api_hash=conf.API_HASH)
 
 
 async def collect_posts():
-    channels_to_export_raw = conf.CHANNEL_REGISTRY['CHANNEL_LIST'][:7]
+    channels_to_export_raw = conf.CHANNEL_REGISTRY['CHANNEL_LIST'][:3]
     channels_to_export_cut = map(cut_channel_link, channels_to_export_raw)
 
     conf_reader = ConfigReader('./config/.config')
     last_post_to_fetch_date = datetime.strptime(conf_reader.get(conf.LAST_POST_PUBLISH_DATE), conf.DATE_FORMAT)
 
     offset_date_string = conf_reader.get(conf.FIRST_POST_PUBLISH_DATE)
-    if offset_date_string:
-        offset_date = datetime.strptime(offset_date_string, conf.DATE_FORMAT)
-    else:
-        offset_date = datetime.now()
+    offset_date = datetime.strptime(offset_date_string, conf.DATE_FORMAT) if offset_date_string else datetime.now()
 
     processor = TextPreprocessor()
 

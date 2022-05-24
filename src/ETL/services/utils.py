@@ -33,6 +33,12 @@ def chat_name_standardizer(chat_name: str) -> str:
 
 
 def export_post_to_csv(csv_writer, processor: TextPreprocessor, message: Message, post_date: datetime):
+    """
+        Exports specified message's text into a file using specified csv_writer.
+
+        Before that, message.text will be preprocessed using specified processor
+    """
+
     channel_name = message.chat.title
     channel_name = processor.remove_emoji(channel_name.lower())
 

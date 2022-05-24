@@ -6,7 +6,6 @@ __pycache__
 db.sqlite3
 
 #static
-.config
 django_static/
 # Logs
 logs/

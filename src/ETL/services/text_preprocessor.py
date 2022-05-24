@@ -5,9 +5,9 @@ import numpy as np
 import pandas as pd
 from pymorphy2 import MorphAnalyzer
 from nltk.tokenize import word_tokenize
-from keras.preprocessing.text import Tokenizer
-from keras.preprocessing.sequence import pad_sequences
 from sklearn.feature_extraction.text import TfidfVectorizer
+from keras.preprocessing.text import Tokenizer
+from keras_preprocessing.sequence import pad_sequences
 
 from config.constants import emoji_regex_compiled
 from config.config import RUSSIAN_STOP_WORDS, MAX_POST_LEN_IN_WORDS
