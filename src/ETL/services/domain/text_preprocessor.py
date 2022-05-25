@@ -1,4 +1,5 @@
 import re
+from abc import ABC, abstractmethod
 from string import punctuation
 
 import numpy as np
@@ -13,7 +14,17 @@ from config.constants import emoji_regex_compiled
 from config.config import RUSSIAN_STOP_WORDS, MAX_POST_LEN_IN_WORDS
 
 
-class TextPreprocessor:
+class ITextPreprocessor(ABC):
+    @abstractmethod
+    def preprocess_text(self, text: str) -> str:
+        pass
+
+    @abstractmethod
+    def preprocess_and_lemmatize(self, text: str) -> str:
+        pass
+
+
+class TextPreprocessor(ITextPreprocessor):
     def __init__(
             self,
             morph: MorphAnalyzer = None,
@@ -24,7 +35,7 @@ class TextPreprocessor:
         self._vectorizer = sklearn_vectorizer if sklearn_vectorizer else TfidfVectorizer()
         self._tokenizer = keras_tokenizer if keras_tokenizer else Tokenizer()
 
-    def make_all_preprocessing(self, text: str) -> str:
+    def preprocess_text(self, text: str) -> str:
         text = text.lower()
         text = self.remove_links(text)
         text = self.remove_emoji(text)
@@ -35,7 +46,7 @@ class TextPreprocessor:
         return text
 
     def preprocess_and_lemmatize(self, text: str) -> str:
-        text = self.make_all_preprocessing(text)
+        text = self.preprocess_text(text)
         tokens = word_tokenize(text, language='russian')
 
         return ' '.join((self._morph.parse(word)[0].normal_form for word in tokens))

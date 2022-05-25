@@ -2,9 +2,10 @@ import re
 from enum import Enum
 
 
-class Languages(Enum):
-    RUSSIAN = 'ru'
-    UKRAINIAN = 'uk'
+class SentimentTypes(Enum):
+    POSITIVE = 'positive'
+    NEGATIVE = 'negative'
+    NEUTRAL = 'neutral'
 
 
 emoji_regex_compiled = re.compile(

@@ -8,7 +8,7 @@ from telethon.tl.types import Channel
 import config.config as conf
 from services.utils import cut_channel_link, export_post_to_csv, get_or_create_channel_file
 from services.config_reader import ConfigReader
-from services.text_preprocessor import TextPreprocessor
+from services.domain.text_preprocessor import TextPreprocessor
 
 
 client = TelegramClient('session-1', api_id=conf.API_ID, api_hash=conf.API_HASH)

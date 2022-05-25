@@ -5,7 +5,9 @@ import json
 
 API_ID = '17332691'
 API_HASH = '626a6ab20ca7d1c151a4d1984448fd0c'
+
 DATA_FOLDER_PATH = '/home/kinfi4/python/Propaganda-Analyzer/src/data'
+SENTIMENT_DICTIONARY_PATH = '/home/kinfi4/python/Propaganda-Analyzer/src/ETL/config/sentiment-words.csv'
 NEWS_DATA_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'news-posts')
 
 LAST_POST_PUBLISH_DATE = 'LAST_POST_PUBLISH_DATE'
