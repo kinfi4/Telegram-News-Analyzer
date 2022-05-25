@@ -42,8 +42,8 @@ def export_post_to_csv(csv_writer, processor: TextPreprocessor, message: Message
     channel_name = message.chat.title
     channel_name = processor.remove_emoji(channel_name.lower())
 
-    post_text = processor.make_all_preprocessing(text=message.text)
-    # post_text = processor.preprocess_and_lemmatize(text=message.text)
+    # post_text = processor.make_all_preprocessing(text=message.text)
+    post_text = processor.preprocess_and_lemmatize(text=message.text)
 
     csv_writer.writerow([
         channel_name,

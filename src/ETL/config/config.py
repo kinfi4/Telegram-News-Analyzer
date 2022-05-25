@@ -1,3 +1,4 @@
+import datetime
 import os
 import json
 
@@ -9,11 +10,12 @@ NEWS_DATA_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'news-posts')
 
 LAST_POST_PUBLISH_DATE = 'LAST_POST_PUBLISH_DATE'
 FIRST_POST_PUBLISH_DATE = 'FIRST_POST_PUBLISH_DATE'
-DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
+DATE_FORMAT = '%Y-%m-%d %H:%M:%S%z'
 
-MESSAGES_MAX_NUMBER_LIMIT = 150
+MESSAGES_MAX_NUMBER_LIMIT = 10_000
 
 MAX_POST_LEN_IN_WORDS = 20
+LOCAL_TIMEZONE = datetime.datetime.now(datetime.timezone.utc).astimezone().tzinfo
 
 with open('/home/kinfi4/python/Propaganda-Analyzer/src/ETL/config/CHANNEL_REGISTRY.json') as registry_file:
     CHANNEL_REGISTRY = json.load(registry_file)

@@ -73,7 +73,7 @@ class TextPreprocessor:
 
     @staticmethod
     def remove_stop_words(text: str):
-        cleared_words = [word for word in word_tokenize(text) if word not in RUSSIAN_STOP_WORDS]
+        cleared_words = [word for word in word_tokenize(text) if word.isalpha() and word not in RUSSIAN_STOP_WORDS]
         truncated_text = cleared_words[:MAX_POST_LEN_IN_WORDS]
         return ' '.join(truncated_text)
 
