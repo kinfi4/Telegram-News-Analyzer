@@ -8,6 +8,13 @@ class SentimentTypes(Enum):
     NEUTRAL = 'neutral'
 
 
+class NewsType(Enum):
+    POLITICAL = 'Political'
+    HUMANITARIAN = 'Humanitarian'
+    SHELLING = 'Shelling'
+    ECONOMICAL = 'Economical'
+
+
 emoji_regex_compiled = re.compile(
     "["
     u"\U0001F600-\U0001F64F"  # emoticons

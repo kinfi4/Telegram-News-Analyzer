@@ -1,12 +1,12 @@
 import os
 import typing
-from datetime import datetime
+from datetime import date
 
 from emoji import EMOJI_DATA
 from telethon.tl.custom.message import Message
 
 from services.domain.text_preprocessor import ITextPreprocessor
-from config.config import DATE_FORMAT, NEWS_DATA_FOLDER_PATH
+from config.config import NEWS_DATA_FOLDER_PATH
 
 
 def cut_channel_link(channel_link: str) -> str:
@@ -32,7 +32,7 @@ def chat_name_standardizer(chat_name: str) -> str:
     return new_chat_name
 
 
-def export_post_to_csv(csv_writer, processor: ITextPreprocessor, message: Message, post_date: datetime):
+def export_post_to_csv(csv_writer, processor: ITextPreprocessor, message: Message, post_date: date):
     """
         Exports specified message's text into a file using specified csv_writer.
 
@@ -48,7 +48,7 @@ def export_post_to_csv(csv_writer, processor: ITextPreprocessor, message: Messag
     csv_writer.writerow([
         channel_name,
         post_text,
-        post_date.strftime(DATE_FORMAT),
+        post_date,
     ])
 
 

@@ -5,7 +5,7 @@ from collections import namedtuple
 
 from nltk.tokenize import word_tokenize
 
-from config.constants import SentimentTypes
+from config.constants import SentimentTypes, NewsType
 
 
 Word = namedtuple('Word', 'form label value')
@@ -45,37 +45,52 @@ class CsvFileIndex:
 
 class ISentimentAnalyzer(ABC):
     @abstractmethod
-    def define_sentiment_type(self, text: str) -> SentimentTypes:
+    def define_sentiment_type(self, text: str, text_type: NewsType) -> SentimentTypes:
         pass
 
 
 class SentimentAnalyzer(ISentimentAnalyzer):
+    _negative_marks = ('не',)
+    _positive_level_threshold = 1
+    _negative_level_threshold = -0.1
+    _initial_sentiment_value = {
+        NewsType.HUMANITARIAN: 0.2, NewsType.SHELLING: -1.1, NewsType.POLITICAL: -0.1, NewsType.ECONOMICAL: -0.2
+    }
+
     def __init__(self, sentiment_dictionary_filepath: str):
         if not os.path.exists(sentiment_dictionary_filepath):
             raise AttributeError(f'Sentiment dictionary: {sentiment_dictionary_filepath} does not exist')
 
         self._word_indexator = CsvFileIndex(sentiment_dictionary_filepath, delimiter=',')
 
-    def define_sentiment_type(self, text: str) -> SentimentTypes:
+    def define_sentiment_type(self, text: str, text_type: NewsType) -> SentimentTypes:
         tokens = word_tokenize(text, language='russian')
-        tokens_sentiment_values = list(map(self._find_word_sentiment_value, tokens))
 
-        not_zeros_values = list(filter(lambda x: x != 0, tokens_sentiment_values))
+        tokens_sentiment_values, negativation_coefficient = [], 1
+        for token in tokens:
+            if token in self._negative_marks:
+                negativation_coefficient = -1
+                continue
 
-        text_sentiment_value = sum(tokens_sentiment_values) if len(not_zeros_values) == 0 else \
-            sum(tokens_sentiment_values) / len(not_zeros_values)
+            tokens_sentiment_values.append(self._find_word_sentiment_value(token, coefficient=negativation_coefficient))
+            negativation_coefficient = 1
 
-        if text_sentiment_value > 0.1:
+        text_sentiment_value = self._initial_sentiment_value[text_type]
+        text_sentiment_value += sum(tokens_sentiment_values)
+
+        print(f'Text: {text} - {text_sentiment_value}', {sum(tokens_sentiment_values)})
+
+        if text_sentiment_value > self._positive_level_threshold:
             return SentimentTypes.POSITIVE
-        elif text_sentiment_value < -0.1:
+        elif text_sentiment_value < self._negative_level_threshold:
             return SentimentTypes.NEGATIVE
         else:
             return SentimentTypes.NEUTRAL
 
-    def _find_word_sentiment_value(self, word: str) -> float:
+    def _find_word_sentiment_value(self, word: str, coefficient: int = 1) -> float:
         word_obj = self._word_indexator.find_word_binary(word)
 
         if word_obj is None:
             return 0
 
-        return word_obj.value
+        return word_obj.value * coefficient

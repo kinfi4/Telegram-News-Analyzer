@@ -1,6 +1,5 @@
 import pickle
 from abc import ABC, abstractmethod
-from typing import Optional
 from collections import Counter
 
 import joblib
@@ -8,17 +7,18 @@ import pandas as pd
 from keras.models import load_model
 
 from config.config import MAX_POST_LEN_IN_WORDS
+from config.constants import NewsType
 from services.domain.text_preprocessor import ITextPreprocessor, TextPreprocessor
 from services.domain.sentiment import SentimentAnalyzer, ISentimentAnalyzer
 
 
 class IPredictor(ABC):
     @abstractmethod
-    def get_sentiment_type(self, text: str) -> str:
+    def get_sentiment_type(self, text: str, news_type: NewsType) -> str:
         pass
 
     @abstractmethod
-    def get_news_type(self, text: str) -> str:
+    def get_news_type(self, text: str) -> NewsType:
         pass
 
 
@@ -48,13 +48,13 @@ class Predictor(IPredictor):
         self._ml_models = [self._knn_model, self._svc_model, self._gaussian_model, self._decision_tree_model]
         self._nn_models = [self._lstm_model, self._cnn_model]
 
-    def get_sentiment_type(self, text: str, make_preprocessing: bool = False) -> str:
+    def get_sentiment_type(self, text: str, news_type: NewsType, make_preprocessing: bool = False) -> str:
         if make_preprocessing:
             text = self._text_preprocessor.preprocess_and_lemmatize(text)
 
-        return self._sentiment_analyzer.define_sentiment_type(text).value
+        return self._sentiment_analyzer.define_sentiment_type(text, news_type).value
 
-    def get_news_type(self, text: str) -> Optional[str]:
+    def get_news_type(self, text: str) -> NewsType:
         ml_prediction_results = self._get_ml_models_predictions(text)
         nn_prediction_results = self._get_nn_models_predictions(text)
 
@@ -93,8 +93,8 @@ class Predictor(IPredictor):
         return tuple(map(self._get_predicted_news_type_label, prediction_results))
 
     @staticmethod
-    def _get_predicted_news_type_label(label_idx: int) -> str:
-        labels_indexes = {0: 'Economical', 1: 'Political', 2: 'Shelling', 3: 'Humanitarian'}
+    def _get_predicted_news_type_label(label_idx: int) -> NewsType:
+        labels_indexes = {0: NewsType.ECONOMICAL, 1: NewsType.POLITICAL, 2: NewsType.SHELLING, 3: NewsType.HUMANITARIAN}
 
         if label_idx not in labels_indexes:
             raise AttributeError(f'The value of label_idx must be between 0 and 3, got label_idx = {label_idx}')
