@@ -1,4 +1,6 @@
+import os
 import csv
+from glob import glob
 from datetime import datetime
 
 from telethon import TelegramClient
@@ -9,6 +11,7 @@ import config.config as conf
 from services.utils import cut_channel_link, export_post_to_csv, get_or_create_channel_file
 from services.config_reader import ConfigReader
 from services.domain.text_preprocessor import TextPreprocessor
+from services.domain.predictor import Predictor
 
 
 client = TelegramClient('session-1', api_id=conf.API_ID, api_hash=conf.API_HASH)
@@ -29,7 +32,6 @@ async def collect_posts():
     processor = TextPreprocessor()
 
     try:
-
         for channel_name in channels_to_export_cut:
             entity: Channel = await client.get_entity(channel_name)
 
@@ -54,3 +56,42 @@ async def collect_posts():
                     export_post_to_csv(csv_writer, processor, message, post_date)
     finally:
         conf_reader.set(conf.FIRST_POST_PUBLISH_DATE, last_post_parsed_date.strftime(conf.DATE_FORMAT))
+
+
+def classify_news():
+    predictor = Predictor.create_from_files(
+        conf.SENTIMENT_DICTIONARY_PATH,
+        conf.SKLEARN_VECTORIZER,
+        conf.KERAS_TOKENIZER,
+        conf.KNN_MODEL_PATH,
+        conf.SVC_MODEL_PATH,
+        conf.DECISION_TREE_MODEL_PATH,
+        conf.GAUSSIAN_MODEL_PATH,
+        conf.LSTM_MODEL_PATH,
+        conf.CNN_MODEL_PATH
+    )
+
+    destination_file_path = os.path.join(conf.PROCESSED_DATA_FOLDER_PATH, 'classified-news.csv')
+    with open(destination_file_path, 'w') as destination_file:
+        csv_writer = csv.writer(destination_file)
+
+        news_file_paths = glob(os.path.join(conf.NEWS_DATA_FOLDER_PATH, '*.csv'))
+
+        for filepath in news_file_paths:
+            with open(filepath) as source_csv_file:
+                csv_reader = csv.reader(source_csv_file)
+
+                # 0 - channel name, 1 - post text, 2 - post date
+                for line in csv_reader:
+                    channel_name, post_text, post_date = line
+
+                    news_type = predictor.get_news_type(text=post_text)
+                    sentiment_type = predictor.get_sentiment_type(text=post_text)
+
+                    csv_writer.writerow([
+                        channel_name,
+                        post_text,
+                        post_date,
+                        news_type,
+                        sentiment_type,
+                    ])

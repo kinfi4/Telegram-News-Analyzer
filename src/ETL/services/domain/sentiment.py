@@ -29,7 +29,6 @@ class CsvFileIndex:
         word_idx = self._binary_search(0, len(self.words) - 1, word)
 
         if word_idx is not None:
-            print(f'found {self.words[word_idx].form}, {self.words[word_idx].value}')
             return self.words[word_idx]
 
     def _binary_search(self, left_idx: int, right_idx: int, word: str) -> Optional[int]:
@@ -59,14 +58,16 @@ class SentimentAnalyzer(ISentimentAnalyzer):
 
     def define_sentiment_type(self, text: str) -> SentimentTypes:
         tokens = word_tokenize(text, language='russian')
-        tokens_sentiment_values = map(self._find_word_sentiment_value, tokens)
+        tokens_sentiment_values = list(map(self._find_word_sentiment_value, tokens))
 
         not_zeros_values = list(filter(lambda x: x != 0, tokens_sentiment_values))
-        text_sentiment_value = sum(tokens_sentiment_values) / len(not_zeros_values)
 
-        if text_sentiment_value > 0.35:
+        text_sentiment_value = sum(tokens_sentiment_values) if len(not_zeros_values) == 0 else \
+            sum(tokens_sentiment_values) / len(not_zeros_values)
+
+        if text_sentiment_value > 0.1:
             return SentimentTypes.POSITIVE
-        elif text_sentiment_value < -0.35:
+        elif text_sentiment_value < -0.1:
             return SentimentTypes.NEGATIVE
         else:
             return SentimentTypes.NEUTRAL
