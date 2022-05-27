@@ -7,8 +7,15 @@ class ConfigReader:
 
     def get(self, key: str):
         for line in self._file_lines:
-            line_key, line_value = line.split('=')
+            tokens = line.split('=')
 
+            if len(tokens) == 1 and tokens[0] == key:
+                return
+
+            if len(tokens) > 2:
+                raise ValueError(f'Line: {line} has a "=" sign in a value, it is forbidden')
+
+            line_key, line_value = tokens
             if line_key == key:
                 return line_value.strip()
 

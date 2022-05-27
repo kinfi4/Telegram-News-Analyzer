@@ -78,7 +78,7 @@ class SentimentAnalyzer(ISentimentAnalyzer):
         text_sentiment_value = self._initial_sentiment_value[text_type]
         text_sentiment_value += sum(tokens_sentiment_values)
 
-        print(f'Text: {text} - {text_sentiment_value}', {sum(tokens_sentiment_values)})
+        # print(f'Text: {text} - {text_sentiment_value}', {sum(tokens_sentiment_values)})
 
         if text_sentiment_value > self._positive_level_threshold:
             return SentimentTypes.POSITIVE

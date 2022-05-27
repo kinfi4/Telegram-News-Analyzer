@@ -42,7 +42,7 @@ def export_post_to_csv(csv_writer, processor: ITextPreprocessor, message: Messag
     channel_name = message.chat.title
     channel_name = processor.preprocess_text(channel_name)
 
-    # post_text = processor.make_all_preprocessing(text=message.text)
+    # post_text = processor.preprocess_text(text=message.text)
     post_text = processor.preprocess_and_lemmatize(text=message.text)
 
     csv_writer.writerow([
