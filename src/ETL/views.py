@@ -117,5 +117,6 @@ def stack_shelling_words():
     df = df[df['news_type'] == NewsType.SHELLING.value]
     df = df['text'].str.split()
     df = df.apply(pd.Series).stack().reset_index(drop=True)
+    df = df[~df.isin(conf.RESTRICTED_LEMMAS_FOR_WORDS_CLOUD)]
 
-    df.to_csv(os.path.join(conf.PROCESSED_DATA_FOLDER_PATH, 'shelling-words.csv'), index=False)
+    df.to_csv(os.path.join(conf.PROCESSED_DATA_FOLDER_PATH, 'words-bag-shelling.csv'), index=False)

@@ -31,7 +31,6 @@ LAST_POST_PUBLISH_DATE = 'LAST_POST_PUBLISH_DATE'
 FIRST_POST_PUBLISH_DATE = 'FIRST_POST_PUBLISH_DATE'
 DATE_FORMAT = '%Y-%m-%d %H:%M:%S%z'
 
-# MESSAGES_MAX_NUMBER_LIMIT = 150
 MESSAGES_MAX_NUMBER_LIMIT = 70_000
 
 MAX_POST_LEN_IN_WORDS = 20
@@ -42,3 +41,6 @@ with open('/home/kinfi4/python/Propaganda-Analyzer/src/ETL/config/CHANNEL_REGIST
 
 with open('/home/kinfi4/python/Propaganda-Analyzer/src/ETL/config/RUSSIAN_STOP_WORDS.json') as russian_stop_words_file:
     RUSSIAN_STOP_WORDS = json.load(russian_stop_words_file)
+
+
+RESTRICTED_LEMMAS_FOR_WORDS_CLOUD = ('ус', 'подписаться', 'rtrussian', 'украина', 'российский', 'украинский', 'российскоукраинский')
