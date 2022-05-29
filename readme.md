@@ -20,7 +20,7 @@ For classification, I created 6 models: **Decision Tree, Support Vector Classifi
 
 -----------------------
 
-<b><h4 style="color:#fcc">All the data needed for training I gathered by myself and can be found <a href="">here</a></h4></b>
+<b><h4 style="color:#fcc">All the data needed for training I gathered by myself and can be found <a href="https://github.com/kinfi4/Telegram-News-Analyzer/blob/master/src/data/training-data/news-for-training.csv">here</a></h4></b>
 
 -------------------------------------
 
