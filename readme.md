@@ -20,7 +20,7 @@ For classification, I created 6 models: **Decision Tree, Support Vector Classifi
 
 -----------------------
 
-<h4 style="color:#fcc">**All the data needed for training I gathered by myself and can be found <a href="">here</a>**</h4>
+<b><h4 style="color:#fcc">All the data needed for training I gathered by myself and can be found <a href="">here</a></h4></b>
 
 -------------------------------------
 
