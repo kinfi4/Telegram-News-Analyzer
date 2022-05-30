@@ -26,7 +26,7 @@ For classification, I created 6 models: **Decision Tree, Support Vector Classifi
 
 Ok, now let's take a look at what do we have:
 
-<img src="https://github.com/kinfi4/Telegram-News-Analyzer/blob/master/screenshots/Screenshot%20from%202022-05-29%2018-57-34.png?raw=true" alt="" width="80%"/> <br>  
+<img src="https://github.com/kinfi4/Telegram-News-Analyzer/blob/master/screenshots/Screenshot%20from%202022-05-29%2018-57-34.png?raw=true" alt=""/> <br>  
 
 -------------------
 
@@ -34,7 +34,7 @@ Let's take a look at how did the news changed during the time. As we can see, th
 
 --------------------------
 
-<img src="https://github.com/kinfi4/Telegram-News-Analyzer/blob/master/screenshots/Screenshot%20from%202022-05-29%2018-59-59.png?raw=true" alt="" width="40%"/>
+<img src="https://github.com/kinfi4/Telegram-News-Analyzer/blob/master/screenshots/Screenshot%20from%202022-05-29%2018-59-59.png?raw=true" alt=""/>
 
 ---------------------------------------
 
