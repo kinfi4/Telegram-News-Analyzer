@@ -73,7 +73,6 @@ def classify_news():
         conf.KERAS_TOKENIZER,
         conf.KNN_MODEL_PATH,
         conf.SVC_MODEL_PATH,
-        conf.DECISION_TREE_MODEL_PATH,
         conf.GAUSSIAN_MODEL_PATH,
         conf.LSTM_MODEL_PATH,
         conf.CNN_MODEL_PATH

@@ -21,7 +21,6 @@ LSTM_MODEL_PATH = os.path.join(TRAINED_MODELS_PATH, 'lstm-news-type-prediction.h
 SVC_MODEL_PATH = os.path.join(TRAINED_MODELS_PATH, 'svc-news-type-prediction.sav')
 KNN_MODEL_PATH = os.path.join(TRAINED_MODELS_PATH, 'knn-news-type-prediction.sav')
 GAUSSIAN_MODEL_PATH = os.path.join(TRAINED_MODELS_PATH, 'nb-news-type-prediction.sav')
-DECISION_TREE_MODEL_PATH = os.path.join(TRAINED_MODELS_PATH, 'tree-news-type-prediction.sav')
 
 SKLEARN_VECTORIZER = os.path.join(TRAINED_MODELS_PATH, 'vectorizer.pk')
 KERAS_TOKENIZER = os.path.join(TRAINED_MODELS_PATH, 'keras-tokenizer.pk')

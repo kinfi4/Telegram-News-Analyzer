@@ -30,7 +30,6 @@ class Predictor(IPredictor):
         *,
         knn_model,
         svc_model,
-        decision_tree_model,
         gaussian_model,
         lstm_model,
         cnn_model,
@@ -40,12 +39,11 @@ class Predictor(IPredictor):
 
         self._knn_model = knn_model
         self._svc_model = svc_model
-        self._decision_tree_model = decision_tree_model
         self._gaussian_model = gaussian_model
         self._lstm_model = lstm_model
         self._cnn_model = cnn_model
 
-        self._ml_models = [self._knn_model, self._svc_model, self._gaussian_model, self._decision_tree_model]
+        self._ml_models = [self._knn_model, self._svc_model, self._gaussian_model]
         self._nn_models = [self._lstm_model, self._cnn_model]
 
     def get_sentiment_type(self, text: str, news_type: NewsType, make_preprocessing: bool = False) -> str:
@@ -109,7 +107,6 @@ class Predictor(IPredictor):
         keras_tokenizer_path: str,
         knn_model_path: str,
         svc_model_path: str,
-        decision_tree_model_path: str,
         gaussian_model_path: str,
         lstm_model_path: str,
         cnn_model_path: str,
@@ -119,7 +116,6 @@ class Predictor(IPredictor):
 
         knn_model = joblib.load(open(knn_model_path, 'rb'))
         svc_model = joblib.load(open(svc_model_path, 'rb'))
-        decision_tree_model = joblib.load(open(decision_tree_model_path, 'rb'))
         gaussian_model = joblib.load(open(gaussian_model_path, 'rb'))
 
         lstm_model = load_model(lstm_model_path)
@@ -135,6 +131,5 @@ class Predictor(IPredictor):
             svc_model=svc_model,
             lstm_model=lstm_model,
             cnn_model=cnn_model,
-            decision_tree_model=decision_tree_model,
             gaussian_model=gaussian_model
         )
