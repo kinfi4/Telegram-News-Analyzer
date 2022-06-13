@@ -10,10 +10,11 @@ if __name__ == '__main__':
     print('-' * 30)
     fetch_and_preprocess_news()
 
-    print('-' * 30)
-    classify_news()
+    if os.getenv('PIPELINE_WORK_MODE', 'FULL') == 'FULL':
+        print('-' * 30)
+        classify_news()
 
-    print('-' * 30)
-    stack_shelling_words()
+        print('-' * 30)
+        stack_shelling_words()
 
     print('PIPELINE ENDED')
