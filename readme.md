@@ -23,6 +23,9 @@ For classification, I created 6 models: **Decision Tree, Support Vector Classifi
 <b><h4 style="color:#fcc">All the data needed for training I gathered by myself and can be found <a href="https://github.com/kinfi4/Telegram-News-Analyzer/blob/master/src/data/training-data/news-for-training.csv">here</a></h4></b>
 
 -------------------------------------
+## You can find the whole research report here:
+https://datastudio.google.com/reporting/c76dd534-e89d-4153-a2d9-82d6e5776b6a
+-------------------------------------
 
 Ok, now let's take a look at what do we have:
 
